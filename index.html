@@ -1,1 +1,424 @@
-file:///Users/alexandrosphaitas/Downloads/index_2.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Passoa Beach Bar — Leave a Review</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#080810;font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+.bg{position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 15% 50%,#1a0a2e 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 15%,#0d1f3c 0%,transparent 55%),
+    radial-gradient(ellipse at 50% 95%,#1a1000 0%,transparent 50%),#080810;}
+.stars{position:fixed;inset:0;z-index:0;
+  background-image:radial-gradient(circle,rgba(255,220,100,.55) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,.25) 1px,transparent 1px);
+  background-size:130px 130px,65px 65px;background-position:0 0,32px 32px;
+  opacity:.4;animation:twinkle 5s ease-in-out infinite alternate;}
+@keyframes twinkle{from{opacity:.2}to{opacity:.5}}
+
+.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;
+  padding:28px 18px 60px;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+.header{text-align:center;margin-bottom:24px;width:100%;}
+.badge{display:inline-block;background:linear-gradient(135deg,#f5c842,#e8843a);
+  color:#080810;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  padding:3px 12px;border-radius:20px;margin-bottom:12px;}
+.title{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;
+  background:linear-gradient(135deg,#f5c842 0%,#e8843a 50%,#f5c842 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.1;margin-bottom:4px;}
+.sub{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px;}
+.hdesc{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;max-width:300px;margin:0 auto;}
+
+.steps{display:flex;gap:5px;justify-content:center;margin-bottom:20px;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .3s;}
+.dot.active{background:#f5c842;width:18px;border-radius:3px;}
+.dot.done{background:rgba(245,200,66,.35);}
+
+.card{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:22px;padding:24px 20px;backdrop-filter:blur(20px);display:none;}
+.card.active{display:block;}
+
+.slabel{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,220,100,.65);margin-bottom:14px;}
+
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.pbtn{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:13px;padding:13px 6px;cursor:pointer;text-align:center;transition:all .2s;color:white;width:100%;}
+.pbtn:hover,.pbtn.sel{border-color:#f5c842;background:rgba(245,200,66,.11);}
+.pemoji{font-size:21px;display:block;margin-bottom:5px;}
+.plabel{font-size:10px;color:rgba(255,255,255,.65);font-weight:500;}
+
+.starsrow{display:flex;gap:6px;justify-content:center;margin:6px 0 4px;}
+.sbtn{font-size:30px;cursor:pointer;transition:transform .15s;filter:grayscale(1);opacity:.35;background:none;border:none;padding:1px;}
+.sbtn.on{filter:none;opacity:1;transform:scale(1.12);}
+
+.opts{display:flex;flex-wrap:wrap;gap:7px;}
+.obtn{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:28px;padding:7px 14px;font-size:12px;color:rgba(255,255,255,.7);
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.obtn.sel{background:linear-gradient(135deg,rgba(245,200,66,.18),rgba(232,132,58,.18));border-color:#f5c842;color:#f5c842;}
+
+.divider{width:36px;height:2px;background:linear-gradient(135deg,#f5c842,#e8843a);margin:16px auto;border-radius:2px;}
+.qtitle{font-size:15px;font-weight:500;color:white;margin-bottom:10px;}
+
+.einput{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:11px;padding:12px 14px;font-size:14px;color:white;
+  font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;}
+.einput::placeholder{color:rgba(255,255,255,.28);}
+.einput:focus{border-color:rgba(245,200,66,.45);}
+.ehint{font-size:11px;margin-top:6px;min-height:16px;color:#f87171;}
+
+.gbtn{width:100%;padding:15px;background:linear-gradient(135deg,#f5c842,#e8843a);
+  border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:14px;
+  font-weight:700;color:#080810;cursor:pointer;margin-top:18px;transition:all .2s;}
+.gbtn:disabled{opacity:.45;cursor:not-allowed;}
+.gbtn.ghost{background:rgba(255,255,255,.07);color:white;margin-top:10px;}
+
+.cbtn{width:100%;margin-top:9px;padding:11px;border-radius:9px;
+  background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.3);
+  color:#f5c842;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;}
+.abtn{width:100%;margin-top:7px;padding:11px;border-radius:9px;
+  background:linear-gradient(135deg,#f5c842,#e8843a);border:none;color:#080810;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+.rbtn{width:100%;margin-top:7px;padding:11px;border-radius:9px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;}
+
+.rbox{background:rgba(255,255,255,.04);border:1px solid rgba(245,200,66,.22);
+  border-radius:13px;padding:16px;font-size:14px;color:rgba(255,255,255,.88);
+  line-height:1.8;min-height:80px;white-space:pre-wrap;}
+
+.ldots{text-align:center;padding:16px 0;}
+.ldots span{display:inline-block;width:7px;height:7px;background:#f5c842;
+  border-radius:50%;margin:0 2px;animation:bounce 1.2s ease-in-out infinite;}
+.ldots span:nth-child(2){animation-delay:.2s;}
+.ldots span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,80%,100%{transform:scale(.55)}40%{transform:scale(1)}}
+
+.offer-card{width:100%;background:linear-gradient(135deg,rgba(245,200,66,.09),rgba(232,132,58,.09));
+  border:1.5px solid rgba(245,200,66,.32);border-radius:18px;padding:22px;text-align:center;}
+.ocode{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;
+  background:linear-gradient(135deg,#f5c842,#e8843a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:4px;margin:6px 0;}
+.odesc{font-size:12px;color:rgba(255,255,255,.58);line-height:1.6;}
+
+.status-row{display:flex;gap:10px;margin-top:12px;font-size:11px;color:rgba(255,255,255,.4);justify-content:center;}
+
+.links-card{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:22px;padding:18px 20px;margin-top:14px;text-align:center;}
+.links-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.links-row a{font-size:10px;color:rgba(255,220,100,.75);text-decoration:none;
+  padding:5px 10px;border:1px solid rgba(255,220,100,.18);border-radius:18px;}
+
+.footer{margin-top:22px;font-size:10px;color:rgba(255,255,255,.18);text-align:center;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="stars"></div>
+<div class="wrap">
+
+  <div class="header">
+    <div class="badge">🌴 Passoa Beach Bar · Corfu</div>
+    <div class="title">Leave a Review</div>
+    <div class="sub">Ipsos · Corfu · Greece</div>
+    <p class="hdesc">Share your vibe & get an <strong style="color:#f5c842">exclusive offer</strong> for your next visit!</p>
+  </div>
+
+  <div class="steps" id="steps">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
+  </div>
+
+  <!-- STEP 0: PLATFORM -->
+  <div class="card active" id="s0">
+    <div class="slabel">📲 Step 1 — Where do you want to post?</div>
+    <div class="pgrid">
+      <button class="pbtn" onclick="selPlatform('Google Maps','https://maps.app.goo.gl/2TkVkdJREpc571Jq9',this)">
+        <span class="pemoji">📍</span><span class="plabel">Google Maps</span>
+      </button>
+      <button class="pbtn" onclick="selPlatform('TripAdvisor','https://www.tripadvisor.com/Search?q=Passoa+Cocktail+Bar+Corfu',this)">
+        <span class="pemoji">🦉</span><span class="plabel">TripAdvisor</span>
+      </button>
+      <button class="pbtn" onclick="selPlatform('Facebook','https://www.facebook.com/passoa.cocktailbar',this)">
+        <span class="pemoji">👍</span><span class="plabel">Facebook</span>
+      </button>
+    </div>
+    <button class="gbtn" id="btn0" disabled onclick="goStep(1)">Continue →</button>
+  </div>
+
+  <!-- STEP 1: QUESTIONS -->
+  <div class="card" id="s1">
+    <div class="slabel">✨ Step 2 — Quick questions (tap to answer)</div>
+
+    <div class="qtitle">⭐ How was your experience?</div>
+    <div class="starsrow" id="stars">
+      <button class="sbtn" onclick="setRating(1)">⭐</button>
+      <button class="sbtn" onclick="setRating(2)">⭐</button>
+      <button class="sbtn" onclick="setRating(3)">⭐</button>
+      <button class="sbtn" onclick="setRating(4)">⭐</button>
+      <button class="sbtn" onclick="setRating(5)">⭐</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="qtitle">🌴 What did you love most? <span style="font-size:11px;color:rgba(255,255,255,.3)">select all that apply</span></div>
+    <div class="opts" id="hlOpts">
+      <button class="obtn" onclick="toggleHL(this,'Cocktails')">Cocktails</button>
+      <button class="obtn" onclick="toggleHL(this,'Shisha')">Shisha</button>
+      <button class="obtn" onclick="toggleHL(this,'Atmosphere')">Atmosphere</button>
+      <button class="obtn" onclick="toggleHL(this,'Beach View')">Beach View</button>
+      <button class="obtn" onclick="toggleHL(this,'Music')">Music</button>
+      <button class="obtn" onclick="toggleHL(this,'Service')">Service</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="qtitle">👥 You came with...</div>
+    <div class="opts" id="grpOpts">
+      <button class="obtn" onclick="selSingle(this,'group','Friends')">Friends</button>
+      <button class="obtn" onclick="selSingle(this,'group','Partner')">Partner</button>
+      <button class="obtn" onclick="selSingle(this,'group','Family')">Family</button>
+      <button class="obtn" onclick="selSingle(this,'group','Solo')">Solo</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="qtitle">🔄 Would you come back?</div>
+    <div class="opts" id="retOpts">
+      <button class="obtn" onclick="selSingle(this,'ret','Absolutely!')">Absolutely!</button>
+      <button class="obtn" onclick="selSingle(this,'ret','Probably yes')">Probably yes</button>
+      <button class="obtn" onclick="selSingle(this,'ret','Already booked again 😄')">Already booked again 😄</button>
+    </div>
+
+    <button class="gbtn" id="btn1" disabled onclick="goStep(2)">Continue →</button>
+  </div>
+
+  <!-- STEP 2: EMAIL -->
+  <div class="card" id="s2">
+    <div class="slabel">🎁 Step 3 — Get your offer</div>
+    <p style="color:rgba(255,255,255,.58);font-size:13px;margin-bottom:16px;line-height:1.6">
+      Enter your email — after posting you'll receive an <strong style="color:#f5c842">exclusive discount code</strong>!
+    </p>
+    <input class="einput" type="email" id="emailInput" placeholder="your@email.com" oninput="checkEmail()" onblur="emailTouched=true;checkEmail()"/>
+    <div class="ehint" id="emailHint"></div>
+    <button class="gbtn" id="btn2" disabled onclick="doGenerate()">✨ Generate My Review</button>
+  </div>
+
+  <!-- STEP 3: REVIEW -->
+  <div class="card" id="s3">
+    <div class="slabel">✍️ Your personalised review</div>
+    <div class="rbox" id="reviewBox"></div>
+    <div id="reviewActions" style="display:none">
+      <button class="rbtn" onclick="doRegenerate()">🔄 Generate a different version</button>
+      <p style="font-size:11px;color:rgba(255,255,255,.35);margin:12px 0 3px;text-align:center">
+        1. Copy → 2. Open <span id="platLabel"></span> → 3. Paste & post!
+      </p>
+      <button class="cbtn" id="copyBtn" onclick="doCopy()">📋 Copy Review</button>
+      <button class="abtn" onclick="window.open(platUrl,'_blank')">Open <span id="platLabel2"></span> →</button>
+      <div id="sendingDiv" style="display:none;text-align:center;padding:16px 0;color:rgba(255,255,255,.5);font-size:13px">
+        <div class="ldots"><span></span><span></span><span></span></div>
+        <p style="margin-top:10px">Saving your review...</p>
+      </div>
+      <button class="gbtn ghost" id="postedBtn" onclick="handlePosted()">I posted it — get my offer! 🎁</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: OFFER -->
+  <div class="card" id="s4">
+    <div class="offer-card">
+      <div style="font-size:38px;margin-bottom:8px">🎉</div>
+      <p style="color:rgba(255,255,255,.5);font-size:12px;margin-bottom:2px">Your exclusive offer code</p>
+      <div class="ocode">PASSOA10</div>
+      <p style="color:white;font-size:14px;font-weight:600;margin:6px 0">10% off your next cocktail!</p>
+      <div class="odesc">
+        Show this screen to our bartender.<br/>
+        <span id="emailConfirm"></span><br/><br/>
+        <strong style="color:rgba(245,200,66,.8)">Thank you — see you on the beach! 🌴</strong>
+      </div>
+    </div>
+    <div class="status-row">
+      <span id="sheetsStatus">⏳ Logging...</span>
+      <span id="emailStatus">⏳ Sending email...</span>
+    </div>
+    <div class="links-card">
+      <p style="color:rgba(255,255,255,.4);font-size:11px">Find us at Ipsos Beach, Corfu</p>
+      <div class="links-row">
+        <a href="https://maps.app.goo.gl/2TkVkdJREpc571Jq9" target="_blank">📍 Maps</a>
+        <a href="https://www.facebook.com/passoa.cocktailbar" target="_blank">📘 Facebook</a>
+        <a href="https://www.instagram.com/passoacocktailbar/" target="_blank">📸 Instagram</a>
+        <a href="http://www.passoa.gr" target="_blank">🌐 Website</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">www.passoa.gr · Ipsos Beach Bar · Corfu</div>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyEUQbn8x38GAEc7yM8AOSQIBkXO9FlxBBQI6_5KUv_sqDyYYskpHtKBrkSnMg9JDTveQ/exec";
+const EJS_SVC  = "service_wplcqvy";
+const EJS_TPL  = "template_k32x3o7";
+const EJS_KEY  = "bFVJLC6IHbsikAjLQ";
+const OWNER    = "passoacocktailbar@gmail.com";
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let platName="", platUrl="", rating=0, highlights=[], group="", ret="", emailVal="", emailTouched=false, reviewText="", typingTimer=null;
+
+// ── REVIEW BUILDER ────────────────────────────────────────────────────────────
+const HL={
+  Cocktails:["The cocktails were absolutely divine — creative, well-balanced, and beautifully presented.","Their cocktail menu is seriously impressive; every drink we tried was crafted with real care.","If you're a cocktail lover, this is your place — the drinks are genuinely exceptional."],
+  Shisha:["The shisha was a real highlight — great flavours, perfectly prepared, and the ideal way to unwind by the sea.","Loved the shisha selection; having a pipe while watching the waves is an experience you won't forget.","The shisha options were top-notch and added the perfect relaxed vibe to the evening."],
+  Atmosphere:["The atmosphere is electric — great music, beautiful lights, and that irresistible beach energy.","The vibe here is truly unmatched; it's the kind of place you simply don't want to leave.","Incredible atmosphere — relaxed yet lively, with a crowd that perfectly matches the energy."],
+  "Beach View":["The views of the Ionian Sea are simply breathtaking — a stunning backdrop for any night out.","Sitting right on the beach with that sea view made every sip taste even better.","The beach setting and sea views are gorgeous — pure Corfu magic at its finest."],
+  Music:["The music was spot on — a great selection that kept the energy going all evening.","Loved the playlist; it complemented the beach bar setting perfectly.","The DJ absolutely nailed it — the music kept everyone in a brilliant mood all night."],
+  Service:["The staff were incredibly warm and attentive — proper hospitality at its finest.","Service was outstanding; the team made us feel genuinely welcome from the moment we arrived.","The team here goes above and beyond — friendly, fast, and completely professional."],
+};
+const OPEN={5:["Passoa is hands down one of the best beach bars we've ever visited in Corfu.","What an incredible spot — Passoa completely blew us away from start to finish.","If you're searching for the perfect beach bar in Corfu, look no further than Passoa."],4:["Had a really fantastic time at Passoa — definitely worth a visit.","Passoa is a brilliant beach bar with a wonderful, laid-back vibe.","We loved our evening at Passoa in Ipsos — a real gem!"],3:["Passoa is a solid beach bar with some real standout moments.","Overall a good experience at Passoa — definitely worth stopping by.","We had a pleasant time at Passoa, a nice beach bar right in Ipsos."]};
+const GRP={Friends:["A perfect night out with the crew — everyone had an amazing time.","Great spot for a group of friends looking for good vibes.","Went with a big group and every single person had the time of their lives."],Partner:["A wonderful spot for a romantic evening right by the sea.","Perfect for a date night — intimate yet vibrant.","Took my partner and it turned into one of our favourite evenings in Corfu."],Family:["A surprisingly family-friendly spot with something for everyone.","Lovely atmosphere that our whole family enjoyed.","Great for a laid-back family evening on the beach."],Solo:["Even as a solo traveller, I felt completely at home here.","A super welcoming spot — came alone and ended up having an unforgettable night.","Came by myself and left having made new friends — the atmosphere brings people together."]};
+const RET={"Absolutely!":["100% going back — already dreaming about our next visit.","We will absolutely be back. Passoa is a Corfu must.","Can't wait to return — Passoa has earned a very loyal customer."],"Probably yes":["Would definitely consider coming back on our next trip.","Likely to return — it left a really positive impression.","Would visit again without hesitation if we're in the area."],"Already booked again 😄":["In fact, we've already booked our next visit — that says it all!","We liked it so much we've already planned our return trip!","Loved it so much we're heading back before we've even left Corfu!"]};
+
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function buildReview(){
+  const open=pick(OPEN[rating]||OPEN[4]);
+  const hlPart=[...highlights].sort(()=>Math.random()-.5).map(h=>pick(HL[h]||[])).filter(Boolean).join(" ");
+  const grp=pick(GRP[group]||GRP.Friends);
+  const r=pick(RET[ret]||RET["Absolutely!"]);
+  return [open,hlPart,grp,r].filter(Boolean).join(" ");
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+let currentStep=0;
+function goStep(n){
+  document.getElementById("s"+currentStep).classList.remove("active");
+  document.getElementById("d"+currentStep).classList.remove("active");
+  document.getElementById("d"+currentStep).classList.add("done");
+  currentStep=n;
+  document.getElementById("s"+n).classList.add("active");
+  document.getElementById("d"+n).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+// ── STEP 0 ────────────────────────────────────────────────────────────────────
+function selPlatform(name,url,btn){
+  platName=name; platUrl=url;
+  document.querySelectorAll(".pbtn").forEach(b=>b.classList.remove("sel"));
+  btn.classList.add("sel");
+  document.getElementById("btn0").disabled=false;
+}
+
+// ── STEP 1 ────────────────────────────────────────────────────────────────────
+function setRating(n){
+  rating=n;
+  document.querySelectorAll(".sbtn").forEach((b,i)=>{
+    b.classList.toggle("on",i<n);
+  });
+  checkStep1();
+}
+function toggleHL(btn,val){
+  btn.classList.toggle("sel");
+  if(highlights.includes(val)) highlights=highlights.filter(x=>x!==val);
+  else highlights.push(val);
+  checkStep1();
+}
+function selSingle(btn,field,val){
+  const containerId=field==="group"?"grpOpts":"retOpts";
+  document.querySelectorAll("#"+containerId+" .obtn").forEach(b=>b.classList.remove("sel"));
+  btn.classList.add("sel");
+  if(field==="group") group=val;
+  else ret=val;
+  checkStep1();
+}
+function checkStep1(){
+  document.getElementById("btn1").disabled=!(rating>0&&highlights.length>0&&group&&ret);
+}
+
+// ── STEP 2 ────────────────────────────────────────────────────────────────────
+function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);}
+function checkEmail(){
+  emailVal=document.getElementById("emailInput").value;
+  const hint=document.getElementById("emailHint");
+  const btn=document.getElementById("btn2");
+  if(!emailTouched||!emailVal){hint.textContent="";btn.disabled=true;return;}
+  if(validEmail(emailVal)){hint.textContent="";btn.disabled=false;}
+  else if(!emailVal.includes("@")){hint.textContent="⚠️ Missing @";btn.disabled=true;}
+  else if(!emailVal.split("@")[1]?.includes(".")){hint.textContent="⚠️ Missing domain (e.g. .com)";btn.disabled=true;}
+  else{hint.textContent="⚠️ Please complete your email";btn.disabled=true;}
+}
+
+// ── STEP 3 ────────────────────────────────────────────────────────────────────
+function doGenerate(){
+  goStep(3);
+  document.getElementById("platLabel").textContent=platName;
+  document.getElementById("platLabel2").textContent=platName;
+  document.getElementById("reviewActions").style.display="none";
+  runTyping(buildReview());
+}
+function doRegenerate(){ runTyping(buildReview()); }
+
+function runTyping(text){
+  reviewText=text;
+  if(typingTimer) clearInterval(typingTimer);
+  document.getElementById("reviewActions").style.display="none";
+  const box=document.getElementById("reviewBox");
+  box.textContent="";
+  let i=0;
+  typingTimer=setInterval(()=>{
+    i+=4; box.textContent=text.slice(0,i);
+    if(i>=text.length){clearInterval(typingTimer);box.textContent=text;document.getElementById("reviewActions").style.display="block";}
+  },16);
+}
+
+function doCopy(){
+  navigator.clipboard.writeText(reviewText);
+  const btn=document.getElementById("copyBtn");
+  btn.textContent="✅ Copied!";
+  setTimeout(()=>btn.textContent="📋 Copy Review",2000);
+}
+
+// ── STEP 4 ────────────────────────────────────────────────────────────────────
+async function handlePosted(){
+  document.getElementById("postedBtn").style.display="none";
+  document.getElementById("sendingDiv").style.display="block";
+
+  const data={email:emailVal,platform:platName,rating,highlights,group,ret,review:reviewText};
+
+  // Log to Sheets via GET (bypasses CORS)
+  try{
+    const params = new URLSearchParams({
+      email: emailVal, platform: platName, rating: rating,
+      highlights: highlights.join(", "), group: group, ret: ret, review: reviewText
+    });
+    const img = new Image();
+    img.src = SHEETS_URL + "?" + params.toString();
+  }catch(e){console.warn("Sheets:",e);}
+
+  // Send email
+  try{
+    emailjs.init(EJS_KEY);
+    await emailjs.send(EJS_SVC,EJS_TPL,{
+      to_email:OWNER,
+      customer_email:emailVal,
+      platform:platName,
+      rating:rating+"/5",
+      highlights:highlights.join(", "),
+      group,ret,
+      review:reviewText
+    });
+  }catch(e){console.warn("Email:",e);}
+
+  goStep(4);
+  document.getElementById("sheetsStatus").textContent="✅ Review logged";
+  document.getElementById("emailStatus").textContent="✅ Notification sent";
+  document.getElementById("emailConfirm").innerHTML=`Confirmation sent to <strong style="color:rgba(245,200,66,.8)">${emailVal}</strong>`;
+}
+</script>
+</body>
+</html>
